@@ -1,0 +1,162 @@
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    </head>
+    <div class = "container">
+      <div class="row" style="width:250%; padding-top: 30px; ">
+      <!-- basket summary code starts here -->
+    <div class="col-md-8" id="basket">
+      
+                          <div class="box">
+    
+                              
+                            <a class="btn btn-default navbar-toggle" href="basket.html" style="    background-color: #4fbfa8;
+                            border-color: #41b39c;
+                            color: white;">
+                                <i class="fa fa-shopping-cart"></i>  <span class="hidden-xs">ADD TO CART</span>
+                            </a>
+                                  <h1>Shopping cart</h1>
+                                  <p class="text-muted">Hi {{currentUser.firstName}} currently have 3 item(s) in your cart.</p>
+                                  
+                                  <div class="table-responsive">
+                                      <table class="table">
+                                          <thead>
+                                              <tr>
+                                                  <th colspan="2">Product</th>
+                                                  <th>Quantity</th>
+                                                  <th>Unit price</th>
+                                                  <th>Discount</th>
+                                                  <th colspan="2">Total</th>
+                                              </tr>
+                                          </thead>
+                                          <tbody>
+    
+                                              <tr *ngFor=" let item of currentUser.cart">
+                                                  
+                                                  <td><a href="#">{{item.productName}}</a>
+                                                  </td>
+                                                  <td>
+                                                      
+                                                  </td>
+                                                  <td>
+                                                    
+                                                        <!-- {{loadQuant() }} -->
+                                                        <input type="number" id="myNumber" value="1" [(ngModel)] = "productQuant">
+                                                  </td>
+                                                  <td>${{item.productPrice}}</td>
+                                                  <td>$0.00</td>
+                                                  <td>${{item.productPrice}}</td>
+                                                  <td><a (click)="cartObjectDelete(item.productName , currentUser)"><i class="fa fa-trash-o"></i></a>
+                                                  </td>
+                                                  <td>
+                                                       <button class="btn btn-default" (click) = "updateBasket(productQuant)"><i class="fa fa-refresh"></i> Update basket</button>
+                                                  </td>
+                                              </tr>
+                                              
+                                          </tbody>
+                                          <tfoot>
+                                              <tr>
+                                                  <th colspan="5">Total</th>
+                                                  <th colspan="2"><b> $ {{fp}} </b></th>
+                                              </tr>
+                                          </tfoot>
+                                      </table>
+      
+                                  </div>
+                                  <!-- /.table-responsive -->
+      
+                                  <div class="box-footer">
+                                      <div class="pull-left">
+                                          <a href="category.html" class="btn btn-default"><i class="fa fa-chevron-left"></i> Continue shopping</a>
+                                      </div>
+                                      <div class="pull-right">
+                                          <button type="submit" class="btn btn-primary" [routerLink]="['/checkoutaddress', op]" >Proceed to checkout <i class="fa fa-chevron-right"></i>
+                                          </button>
+                                      </div>
+                                  </div>
+                                  </div>
+                                  </div>
+                          <!-- basket summary code ends here -->
+                          <!-- order- summary and discount  code starts here -->
+    
+                          <div class="col-md-3">
+                              <div class="box" id="order-summary">
+                                  <div class="box-header">
+                                      <h3>Order summary</h3>
+                                  </div>
+                                  <p class="text-muted">Shipping and additional costs are calculated based on the values you have entered.</p>
+          
+                                  <div class="table-responsive">
+                                      <table class="table">
+                                          <tbody>
+                                              <tr>
+                                                  <td>Order subtotal</td>
+                                                  <th><b> $ {{fp}} </b></th>
+                                              </tr>
+                                              <tr>
+                                                  <td>Shipping and handling</td>
+                                                  <th>$10.00</th>
+                                              </tr>
+                                              <tr>
+                                                  <td>Tax</td>
+                                                  <th>$0.00</th>
+                                              </tr>
+                                              <tr class="total">
+                                                  <td>Total</td>
+                                                  <th><b> $ {{op}} </b></th>
+                                              </tr>
+                                          </tbody>
+                                      </table>
+                                  </div>
+          
+                              </div>
+          
+          
+                              <div class="box">
+                                  <div class="box-header">
+                                      <h4>Coupon code</h4>
+                                  </div>
+                                  <p class="text-muted">If you have a coupon code, please enter it in the box below.</p>
+                                  
+                                      <div class="input-group">
+          
+                                          <input type="text" class="form-control" value="GHOST PROTOCOL">
+          
+                                          <span class="input-group-btn">
+          
+                    <button class="btn btn-primary" type="button" (click)="orderDiscount()"><i class="fa fa-gift"></i></button>
+          
+                      </span>
+                                      </div>
+                                      <!-- /input-group -->
+                                  
+                              </div>
+          
+                          </div>
+                          <!-- order- summary and discount  code starts here -->
+      
+                                  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+                                  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+                                  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+      
+                          </div>
+                        </div>
+                          
+                          <!-- *** COPYRIGHT ***
+ _________________________________________________________ -->
+            <div id="copyright">
+                    <div class="container">
+                        <div class="col-md-6">
+                            <p class="pull-left">© 2017 Web Design Project under Amuthan Arulraj [N.E.U]</p>
+    
+                        </div>
+                        <div class="col-md-6">
+                            <p class="pull-right">Template by <a href="#">Ghost Protocol</a>
+                                <!-- Not removing these links is part of the license conditions of the template. Thanks for understanding :) If you want to use the template without the attribution links, you can do so after supporting further themes development at https://bootstrapious.com/donate  -->
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            <!-- *** COPYRIGHT END *** -->
+    
+    
+    

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+    <style>
+        article,
+        aside,
+        figure,
+        footer,
+        header,
+        hgroup,
+        menu,
+        nav,
+        section {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="col-md-12">
+        <button [disabled]="loading" (click)="showProducts()" class="btn btn-success">Show Products</button>
+        <h3>Products:</h3>
+
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <tr>
+                    <th>Product Id</th>
+                    <th>Product Name</th>
+                    <th>Product Desc</th>
+                    <th> Geo Type</th>
+                    <th> Gen Type</th>
+                    <th> Wear Type</th>
+                    <th> Category Type</th>
+                    <th> Rating</th>
+                    <th> Popularity</th>
+                    <th>Availiblity</th>
+                    <th>Price</th>
+                    <th> Discount</th>
+                    <th> Front Picture</th>
+                    <th>Back Picture</th>
+                    <th>Delete</th>
+                </tr>
+
+                <tr *ngFor="let product of products">
+                    <td span (click)="editProduct(product)">{{product.productId}}</td>
+                    <td span (click)="editProduct(product)">{{product.productName}}</td>
+                    <td span (click)="editProduct(product)">{{product.productDesc}}</td>
+                    <td span (click)="editProduct(product)">{{product.geoType}}</td>
+                    <td span (click)="editProduct(product)">{{product.genType}}</td>
+                    <td span (click)="editProduct(product)">{{product.wearType}}</td>
+                    <td span (click)="editProduct(product)">{{product.categoryType}}</td>
+                    <td span (click)="editProduct(product)">{{product.rating}}</td>
+                    <td span (click)="editProduct(product)">{{product.popularity}}</td>
+                    <td span (click)="editProduct(product)">{{product.totalAvailability}}</td>
+                    <td span (click)="editProduct(product)">{{product.price}}</td>
+                    <td span (click)="editProduct(product)">{{product.discount}}</td>
+                    <td span (click)="editProduct(product)">{{product.frontImage}}</td>
+                    <td span (click)="editProduct(product)">{{product.backImage}}</td>
+                    <td span (click)="deleteProduct(product._id)">
+                        <i class="fa fa-trash"></i>
+                    </td>
+                </tr>
+
+
+            </table>
+        </div>
+
+        <form name="form" (ngSubmit)="f.form.valid" #f="ngForm" novalidate>
+
+            <!-- Product ID Code -->
+            <div class="form-group" [ngClass]="{ 'has-error': f.submitted}">
+                <label for="productId">Product ID</label>
+                <input type="number" class="form-control" name="productId" [(ngModel)]="model.productId" #lastName="ngModel" required />
+            </div>
+
+            <!-- Product Name Display -->
+            <div class="form-group" [ngClass]="{ 'has-error': f.submitted}">
+                <label for="productName">Product Name</label>
+                <input type="text" class="form-control" name="productName" [(ngModel)]="model.productName" #firstName="ngModel" required
+                />
+            </div>
+
+            <!-- Product Desc Display -->
+            <div class="form-group" [ngClass]="{ 'has-error': f.submitted}">
+                <label for="productDesc">Product Desc</label>
+                <input type="text" class="form-control" name="productDesc" [(ngModel)]="model.productDesc" #firstName="ngModel" required
+                />
+            </div>
+
+            <!-- Product Geo Type Display -->
+            <div class="form-group" [ngClass]="{ 'has-error': f.submitted}">
+                <label for="geoType">Geo Type</label>
+                <input type="text" class="form-control" name="geoType" [(ngModel)]="model.geoType" #firstName="ngModel" required />
+            </div>
+
+            <!-- Product Gender Type Display -->
+            <div class="form-group" [ngClass]="{ 'has-error': f.submitted}">
+                <label for="genType">Gender Type</label>
+                <input type="text" class="form-control" name="genType" [(ngModel)]="model.genType" #firstName="ngModel" required />
+            </div>
+
+            <!-- Product Category Type Display -->
+            <div class="form-group" [ngClass]="{ 'has-error': f.submitted}">
+                <label for="wearType">Wear Type</label>
+                <input type="text" class="form-control" name="wearType" [(ngModel)]="model.wearType" #firstName="ngModel" required />
+            </div>
+
+            <!-- Product Category Type Display -->
+            <div class="form-group" [ngClass]="{ 'has-error': f.submitted}">
+                <label for="categoryType">Category Type</label>
+                <input type="text" class="form-control" name="categoryType" [(ngModel)]="model.categoryType" #firstName="ngModel" required
+                />
+            </div>
+
+            <!-- Product Rating Display -->
+            <div class="form-group" [ngClass]="{ 'has-error': f.submitted}">
+                <label for="rating">Rating</label>
+                <input type="number" class="form-control" name="rating" [(ngModel)]="model.rating" #lastName="ngModel" required />
+            </div>
+
+            <!-- Product Availability Display -->
+            <div class="form-group" [ngClass]="{ 'has-error': f.submitted}">
+                <label for="totalAvailability">Availability</label>
+                <input type="number" class="form-control" name="totalAvailability" [(ngModel)]="model.totalAvailability" #lastName="ngModel"
+                    required />
+            </div>
+
+            <!-- Product Popularity Display -->
+            <div class="form-group" [ngClass]="{ 'has-error': f.submitted}">
+                <label for="popularity"> Popularity</label>
+                <input type="text" class="form-control" name="popularity" [(ngModel)]="model.popularity" #firstName="ngModel" required />
+            </div>
+
+            <!-- Product Price Display -->
+            <div class="form-group" [ngClass]="{ 'has-error': f.submitted}">
+                <label for="price">Price</label>
+                <input type="number" class="form-control" name="price" [(ngModel)]="model.price" #lastName="ngModel" required />
+            </div>
+
+            <!-- Product Discount Display -->
+            <div class="form-group" [ngClass]="{ 'has-error': f.submitted}">
+                <label for="discount">Discount</label>
+                <input type="number" class="form-control" name="discount" [(ngModel)]="model.discount" #lastName="ngModel" required />
+            </div>
+
+            <!-- Front Picture Display -->
+            <div class="form-group" [ngClass]="{ 'has-error': f.submitted}">
+                <label for="frontImage">Front Image</label>
+                <input type="file" id="frontImage" name="frontImage" />
+            </div>
+
+            <!-- Back Picture Display -->
+            <div class="form-group" [ngClass]="{ 'has-error': f.submitted}">
+                <label for="backImage">Back Image</label>
+                <input type="file" id="backImage" name="backImage" />
+            </div>
+
+            <div class="form-group">
+                <button [disabled]="loading" (click)="addProduct(model)" class="btn btn-success">Add Product</button>
+                <button [disabled]="loading" (click)="updateProduct(model)" class="btn btn-success">Update Product</button>
+            </div>
+        </form>
+
+
+
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</body>

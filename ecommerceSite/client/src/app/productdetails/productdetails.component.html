@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="robots" content="all,follow">
+  <meta name="googlebot" content="index,follow,snippet,archive">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="GhostProtocol e-commerce template">
+  <meta name="author" content="Ondrej Svestka | ondrejsvestka.cz">
+  <meta name="keywords" content="">
+
+  <title>
+    GhostProtocol : e-commerce website
+  </title>
+
+  <meta name="keywords" content="">
+
+  <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script> -->
+
+
+  <!-- styles -->
+  <link ng-href="./src/app/css/font-awesome.css" rel="stylesheet">
+  <link ng-href=".src/app/css/bootstrap.min.css" rel="stylesheet">
+  <link ng-href="./src/app/css/animate.min.css" rel="stylesheet">
+  <link ng-href=".src/app/css/owl.carousel.css" rel="stylesheet">
+  <link ng-href=".src/app/css/owl.theme.css" rel="stylesheet">
+
+  <!-- theme stylesheet -->
+  <link ng-href=".src/app/css/style.default.css" rel="stylesheet" id="theme-stylesheet">
+
+  <!-- your stylesheet with modifications -->
+  <link ng-href=".src/app/css/custom.css" rel="stylesheet">
+
+  <script src=".src/app/js/respond.min.js"></script>
+
+  <link rel="shortcut icon" href="../favicon.png">
+
+
+
+</head>
+
+<body>
+
+  <!-- *** TOPBAR ***
+ _________________________________________________________ -->
+  <div id="top">
+    <div class="container">
+      <div class="col-md-6 offer" data-animate="fadeInDown">
+        <a href="#" class="btn btn-success btn-sm" data-animate-hover="shake">Offer of the day</a>
+        <a href="#">Get flat 35% off on orders over $50!</a>
+      </div>
+      <div class="col-md-6" data-animate="fadeInDown">
+        <ul class="menu">
+          <h5 id="username" *ngIf="currentUser">Hi {{currentUser.firstName}}!</h5>
+          <li>
+            <a *ngIf="currentUser; else noUser" [routerLink]="['/home']">Logout</a>
+            <ng-template #noUser>
+              <a id="login" (click)="redirectLogin();">Login</a>
+            </ng-template>
+          </li>
+          <li>
+            <a [routerLink]="['/register']">Register</a>
+
+          </li>
+          <li>
+            <a id="chat" (click)="chat();">Chat</a>
+
+          </li>
+          <li>
+            <a href="contact.html">Contact</a>
+          </li>
+          <li>
+            <a href="#">Recently viewed</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="modal" id="login-modal">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="Login">Customer login</h4>
+          </div>
+          <div class="modal-body">
+            <form action="customer-orders.html" method="post">
+              <form name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
+                <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
+                  <label for="username">Username</label>
+                  <input type="text" class="form-control" name="username" [(ngModel)]="model.username" #username="ngModel" required />
+                  <div *ngIf="f.submitted && !username.valid" class="help-block">Username is required</div>
+                </div>
+                <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
+                  <label for="password">Password</label>
+                  <input type="password" class="form-control" name="password" [(ngModel)]="model.password" #password="ngModel" required />
+                  <div *ngIf="f.submitted && !password.valid" class="help-block">Password is required</div>
+                </div>
+                <div class="form-group" class="text-center">
+                  <button [disabled]="loading" class="btn btn-primary">
+                    <i class="fa fa-sign-in"></i>Login</button>
+                  <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                  />
+                  <!-- <a [routerLink]="['/register']" class="btn btn-link">Register</a> -->
+                </div>
+              </form>
+            </form>
+
+            <p class="text-center text-muted">Not registered yet?</p>
+            <p class="text-center text-muted">
+              <a [routerLink]="['/register']">
+                <strong>Register now</strong>
+              </a>! It is easy and done in 1&nbsp;minute and gives you access to special discounts and much more!</p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Integrated the Chat Application -->
+    <div class="chatmodal" id="chat-modal">
+      <div class="chatmodal-dialog modal-sm">
+
+        <div class="chatmodal-content">
+          <div class="chatmodal-header">
+            <button type="button" class="close" data-dismiss="chatmodal" aria-hidden="true">&times;</button>
+            <h4 class="chatmodal-title" id="Login">Chat</h4>
+          </div>
+          <div class="chatmodal-body">
+            <div>
+              <div class="main">
+                <div class="firstSubChild contain">
+                  <div class="header">
+                    <h2>Messages</h2>
+                    <div class="chat-box">
+                      <div class="message-box">
+                        <div>
+                          <ul id="messages" class="message"></ul>
+                        </div>
+                        <div class="enter-message">
+                          <input id="message-boxID" #messagebox placeholder="Type your message here" (keyup)="sendMessageOnEnter($event, messagebox)"
+                            (keydown)="update()" autocomplete="off" value="" autofocus required>
+                          <button class="send" (click)="sendMessage(messagebox)">Send</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="secondSubChild">
+                  <div class=user-alert>
+                    <div id="newUserID" *ngIf="newUser">
+                      {{newUserName}} joined Chat!
+                    </div>
+                    <div id="leftUserID" *ngIf="exitedUser">
+                      {{exitedUserName}} left the Chat!
+                    </div>
+                  </div>
+                  <div class="caption">
+                    <h2>Connected Users</h2>
+                  </div>
+                  <div class="user-list">
+                    <ul class="user-list-ul">
+                      <li *ngFor="let name of clientsNameList" class="user-list__item">
+                        <div>
+                          <input class="check-box" type="checkbox" [checked]="true" disabled>
+                        </div>
+                        <div class="user-list__content">
+                          <div class="user-list__name">
+                            <div class="text text_size_m">{{name}}</div>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End of Chat Application -->
+
+  </div>
+
+  <!-- *** TOP BAR END *** -->
+
+  <!-- *** NAVBAR ***
+ _________________________________________________________ -->
+
+  <div class="navbar navbar-default yamm" role="navigation" id="navbar">
+    <div class="container">
+      <div class="navbar-header">
+
+        <a class="navbar-brand home" href="index.html" data-animate-hover="bounce">
+          <img src="assets/img/logo.png" alt="<<LOGO here>>" class="hidden-xs" id="opacityror">
+          <img src="assets/img/logo-small.png" alt="GhostProtocol logo" class="visible-xs" id="opacityror">
+          <span class="sr-only">GhostProtocol - go to homepage</span>
+        </a>
+        <div class="navbar-buttons">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation">
+            <span class="sr-only">Toggle navigation</span>
+            <i class="fa fa-align-justify"></i>
+          </button>
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#search">
+            <span class="sr-only">Toggle search</span>
+            <i class="fa fa-search"></i>
+          </button>
+          <a class="btn btn-default navbar-toggle" [routerLink]="['/basket']">
+            <i class="fa fa-shopping-cart"></i>
+            <span class="hidden-xs">3 items in cart</span>
+          </a>
+        </div>
+      </div>
+      <!--/.navbar-header -->
+
+      <div class="navbar-collapse collapse" id="navigation">
+
+        <ul class="nav navbar-nav navbar-left">
+          <li class="active">
+            <a href="index.html">Home</a>
+          </li>
+          <li class="dropdown yamm-fw">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="200">Men
+              <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <div class="yamm-content">
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h5>Casuals</h5>
+                      <ul>
+                        <li>
+                          <a [routerLink]="['/mentshirts']">T-shirts</a>
+                        </li>
+                        <li>
+                          <a href="category.html">Jeans</a>
+                        </li>
+                        <li>
+                          <a href="category.html">Jackets</a>
+                        </li>
+                        <li>
+                          <a href="category.html">Polos</a>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="col-sm-3">
+                      <h5>Formals</h5>
+                      <ul>
+                        <li>
+                          <a href="category.html">Shirts</a>
+                        </li>
+                        <li>
+                          <a href="category.html">Coats & Blazers</a>
+                        </li>
+                        <li>
+                          <a href="category.html">Trousers</a>
+                        </li>
+                        <li>
+                          <a href="category.html">Suits</a>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="col-sm-3">
+                      <h5>Party Wear</h5>
+                      <ul>
+                        <li>
+                          <a href="category.html">T-shirts</a>
+                        </li>
+                        <li>
+                          <a href="category.html">Jeans</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <!-- /.yamm-content -->
+              </li>
+            </ul>
+          </li>
+
+          <li class="dropdown yamm-fw">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="200">Women
+              <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <div class="yamm-content">
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h5>Casuals</h5>
+                      <ul>
+                        <li>
+                          <a [routerLink]="['/womentshirts']">Tops</a>
+                        </li>
+                        <li>
+                          <a href="category.html">Tunics</a>
+                        </li>
+                        <li>
+                          <a href="category.html">Jeans</a>
+                        </li>
+                        <li>
+                          <a href="category.html">Jeggings</a>
+                        </li>
+                        <li>
+                          <a href="category.html">Shorts</a>
+                        </li>
+                        <li>
+                          <a href="category.html">Skirts & Palazoos</a>
+                        </li>
+                        <li>
+                          <a href="category.html">Jackets</a>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="col-sm-3">
+                      <h5>Formals</h5>
+                      <ul>
+                        <li>
+                          <a href="category.html">Shirts</a>
+                        </li>
+                        <li>
+                          <a href="category.html">Coats & Blazer</a>
+                        </li>
+                        <li>
+                          <a href="category.html">Trousers</a>
+                        </li>
+                        <li>
+                          <a href="category.html">Suits</a>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="col-sm-3">
+                      <h5>Party Wear</h5>
+                      <ul>
+                        <li>
+                          <a href="category.html">Dresses</a>
+                        </li>
+                        <li>
+                          <a href="category.html">Jumpsuits</a>
+                        </li>
+                        <li>
+                          <a href="category.html">Maxi Long</a>
+                        </li>
+                        <li>
+                          <a href="category.html">Party Shorts</a>
+                        </li>
+                      </ul>
+
+                    </div>
+
+                  </div>
+                </div>
+                <!-- /.yamm-content -->
+              </li>
+            </ul>
+          </li>
+
+          <li class="dropdown yamm-fw">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="200">Quick Links
+              <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <div class="yamm-content">
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h5>Site</h5>
+                      <ul>
+                        <li>
+                          <a href="index.html">Homepage</a>
+                        </li>
+                        <li>
+                          <a href="category-right.html">About Us</a>
+                        </li>
+                        <li>
+                          <a href="category-full.html">Contact</a>
+                        </li>
+                        <li>
+                          <a href="detail.html">FAQ</a>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="col-sm-3">
+                      <h5>User</h5>
+                      <ul>
+                        <li>
+                          <a href="register.html">Register / login</a>
+                        </li>
+                        <li>
+                          <a href="basket.html">Shopping cart</a>
+                        </li>
+                        <li>
+                          <a href="customer-orders.html">Orders history</a>
+                        </li>
+                        <li>
+                          <a href="customer-order.html">Order history detail</a>
+                        </li>
+                        <li>
+                          <a href="customer-wishlist.html">Wishlist</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <!-- /.yamm-content -->
+              </li>
+            </ul>
+          </li>
+        </ul>
+
+      </div>
+      <!--/.nav-collapse -->
+
+      <div class="navbar-buttons">
+
+        <div class="navbar-collapse collapse right" id="basket-overview">
+          <a [routerLink]="['/basket']" class="btn btn-primary navbar-btn">
+            <i class="fa fa-shopping-cart"></i>
+            <span class="hidden-sm">3 items in cart</span>
+          </a>
+        </div>
+        <!--/.nav-collapse -->
+
+        <div class="navbar-collapse collapse right" id="search-not-mobile">
+          <button type="button" class="btn navbar-btn btn-primary" data-toggle="collapse" data-target="#search">
+            <span class="sr-only">Toggle search</span>
+            <i class="fa fa-search"></i>
+          </button>
+        </div>
+
+      </div>
+
+      <div class="collapse clearfix" id="search">
+
+        <form class="navbar-form" role="search">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search">
+            <span class="input-group-btn">
+
+              <button type="submit" class="btn btn-primary">
+                <i class="fa fa-search"></i>
+              </button>
+
+            </span>
+          </div>
+        </form>
+
+      </div>
+      <!--/.nav-collapse -->
+
+    </div>
+    <!-- /.container -->
+  </div>
+  <!-- /#navbar -->
+
+  <!-- *** NAVBAR END *** -->
+  <div id="all">
+
+    <div id="content">
+      <div class="container">
+
+        <div class="col-md-12">
+          <ul class="breadcrumb">
+            <li>
+              <a href="#">Home</a>
+            </li>
+            <li>
+              <a href="#">{{genType}}</a>
+            </li>
+            <li>
+              <a href="#">{{categoryType}}</a>
+            </li>
+            <li>{{productDesc}}</li>
+          </ul>
+
+        </div>
+
+        <div class="col-md-3">
+          <!-- *** MENUS AND FILTERS ***
+         _________________________________________________________ -->
+          <div class="panel panel-default sidebar-menu">
+
+            <div class="panel-heading">
+              <h3 class="panel-title">Categories</h3>
+            </div>
+
+            <div class="panel-body">
+              <ul class="nav nav-pills nav-stacked category-menu">
+                <li *ngIf="genType == 'men'; else womengen" class="active">
+                  <a [routerLink]="['/mentshirts']">Men
+                    <!-- <span class="badge pull-right">{{products.length}}</span> -->
+                  </a>
+                  <ul>
+                    <li *ngIf="categoryType == 'tshirts' && genType == 'men'; else ments" class="subactive">
+                      <ng-template #ments>
+                        <li>
+                      </ng-template>
+                      <a href="category.html">T-shirts</a>
+                      </li>
+                      <li *ngIf="categoryType == 'jeans' && genType == 'men'; else menj" class="subactive">
+                        <a href="category.html">Jeans</a>
+                      </li>
+
+                      <ng-template #menj>
+                        <li>
+                          <a href="category.html">Jeans</a>
+                        </li>
+                      </ng-template>
+
+                      <li *ngIf="categoryType == 'jackets' && genType == 'men'; else menja" class="subactive">
+
+
+                        <a href="category.html">Jackets</a>
+                      </li>
+                      <ng-template #menja>
+                        <li>
+
+                          <a href="category.html">Jackets</a>
+                        </li>
+                      </ng-template>
+
+                      <li *ngIf="categoryType == 'polos' && genType == 'men'; else menp" class="subactive">
+
+                        <a href="category.html">Polos</a>
+                      </li>
+                      <ng-template #menp>
+                        <li>
+                          <a href="category.html">Polos</a>
+                        </li>
+                      </ng-template>
+
+                      <li *ngIf="categoryType == 'shirts' && genType == 'men'; else mensh" class="subactive">
+
+                        <a href="category.html">Formals</a>
+                      </li>
+                      <ng-template #mensh>
+                        <li>
+                          <a href="category.html">Formals</a>
+                        </li>
+                      </ng-template>
+
+                      <li *ngIf="categoryType == 'partywear' && genType == 'men'; else menpw" class="subactive">
+                        <a href="category.html">Party Wear</a>
+                      </li>
+                      <ng-template #menpw>
+
+                        <li>
+                          <a href="category.html">Party Wear</a>
+                        </li>
+                      </ng-template>
+
+                  </ul>
+                  </li>
+                  <ng-template #womengen>
+                    <li>
+                      <a [routerLink]="['/mentshirts']">Men
+                        <!-- <span class="badge pull-right">{{products.length}}</span> -->
+                      </a>
+                      <ul>
+                        <li *ngIf="categoryType == 'tshirts' && genType == 'men'; else ments" class="subactive">
+                          <ng-template #ments>
+                            <li>
+                          </ng-template>
+                          <a href="category.html">T-shirts</a>
+                          </li>
+                          <li *ngIf="categoryType == 'jeans' && genType == 'men'; else menj" class="subactive">
+                            <a href="category.html">Jeans</a>
+                          </li>
+
+                          <ng-template #menj>
+                            <li>
+                              <a href="category.html">Jeans</a>
+                            </li>
+                          </ng-template>
+
+                          <li *ngIf="categoryType == 'jackets' && genType == 'men'; else menja" class="subactive">
+
+
+                            <a href="category.html">Jackets</a>
+                          </li>
+                          <ng-template #menja>
+                            <li>
+
+                              <a href="category.html">Jackets</a>
+                            </li>
+                          </ng-template>
+
+                          <li *ngIf="categoryType == 'polos' && genType == 'men'; else menp" class="subactive">
+
+                            <a href="category.html">Polos</a>
+                          </li>
+                          <ng-template #menp>
+                            <li>
+                              <a href="category.html">Polos</a>
+                            </li>
+                          </ng-template>
+
+                          <li *ngIf="categoryType == 'shirts' && genType == 'men'; else mensh" class="subactive">
+
+                            <a href="category.html">Formals</a>
+                          </li>
+                          <ng-template #mensh>
+                            <li>
+                              <a href="category.html">Formals</a>
+                            </li>
+                          </ng-template>
+
+                          <li *ngIf="categoryType == 'partywear' && genType == 'men'; else menpw" class="subactive">
+                            <a href="category.html">Party Wear</a>
+                          </li>
+                          <ng-template #menpw>
+
+                            <li>
+                              <a href="category.html">Party Wear</a>
+                            </li>
+                          </ng-template>
+
+                      </ul>
+                      </li>
+                  </ng-template>
+
+                  <li *ngIf="genType == 'women'; else mengen" class="active">
+                    <a [routerLink]="['/womentshirts']">Women
+                      <!-- <span class="badge pull-right">{{products.length}}</span> -->
+                    </a>
+                    <ul>
+                      <li *ngIf="categoryType == 'tshirts' && genType == 'women'; else woments" class="subactive">
+                        <a href="category.html">Casuals</a>
+                      </li>
+                      <ng-template #woments>
+                        <li>
+                          <a href="category.html">Casuals</a>
+                        </li>
+                      </ng-template>
+
+                      <li *ngIf="categoryType == 'shirts' && genType == 'women' ; else womensh" class="subactive">
+                        <a href="category.html">Formals</a>
+                      </li>
+                      <ng-template #womensh>
+
+                        <li>
+                          <a href="category.html">Formals</a>
+                        </li>
+                      </ng-template>
+
+                      <li *ngIf="categoryType == 'jumpsuit' && genType == 'women'; else womenjs" class="subactive">
+                        <a href="category.html">Party Wear</a>
+                      </li>
+                      <ng-template #menjs>
+                        <li>
+                          <a href="category.html">Party Wear</a>
+                        </li>
+                      </ng-template>
+
+                    </ul>
+                  </li>
+                  <ng-template #mengen>
+                    <li>
+                      <a [routerLink]="['/womentshirts']">Women
+                        <!-- <span class="badge pull-right">{{products.length}}</span> -->
+                      </a>
+                      <ul>
+                        <li *ngIf="categoryType == 'tshirts' && genType == 'women'; else woments" class="subactive">
+                          <a href="category.html">Casuals</a>
+                        </li>
+                        <ng-template #woments>
+                          <li>
+                            <a href="category.html">Casuals</a>
+                          </li>
+                        </ng-template>
+
+                        <li *ngIf="categoryType == 'shirts' && genType == 'women' ; else womensh" class="subactive">
+                          <a href="category.html">Formals</a>
+                        </li>
+                        <ng-template #womensh>
+
+                          <li>
+                            <a href="category.html">Formals</a>
+                          </li>
+                        </ng-template>
+
+                        <li *ngIf="categoryType == 'jumpsuit' && genType == 'women'; else womenjs" class="subactive">
+                          <a href="category.html">Party Wear</a>
+                        </li>
+                        <ng-template #menjs>
+                          <li>
+                            <a href="category.html">Party Wear</a>
+                          </li>
+                        </ng-template>
+
+                      </ul>
+                    </li>
+                  </ng-template>
+
+              </ul>
+
+            </div>
+          </div>
+
+          <!-- *** MENUS AND FILTERS END *** -->
+
+
+        </div>
+
+        <div class="col-md-9">
+
+          <div class="row" id="productMain">
+            <div class="col-sm-6">
+              <div id="mainImage">
+                <img src="assets/img/{{frontImage}}" alt="" class="img-responsive">
+              </div>
+
+              <div class="ribbon sale">
+                <div class="theribbon">SALE</div>
+                <div class="ribbon-background"></div>
+              </div>
+              <!-- /.ribbon -->
+
+              <div class="ribbon new">
+                <div class="theribbon">NEW</div>
+                <div class="ribbon-background"></div>
+              </div>
+              <!-- /.ribbon -->
+
+            </div>
+            <div class="col-sm-6">
+              <div class="box">
+                <h1 class="text-center">{{productDesc}}</h1>
+                <p class="goToDescription">
+                  <a href="#details" class="scroll-to">Scroll to product details, material & care and sizing</a>
+                </p>
+                <p class="price">${{productPrice}}</p>
+
+                <p class="text-center buttons">
+                  <a href="basket.html" class="btn btn-primary">
+                    <i class="fa fa-shopping-cart"></i> Add to cart</a>
+                  <a href="basket.html" class="btn btn-default">
+                    <i class="fa fa-heart"></i> Add to wishlist</a>
+                </p>
+
+
+              </div>
+
+              <div class="row" id="thumbs">
+                <div class="col-xs-4">
+                  <a href="assets/img/{{frontImage}}" class="thumb">
+                    <img src="assets/img/{{frontImage}}" alt="" class="img-responsive">
+                  </a>
+                </div>
+                <div class="col-xs-4">
+                  <a href="assets/img/{{backImage}}" class="thumb">
+                    <img src="assets/img/{{backImage}}" alt="" class="img-responsive">
+                  </a>
+                </div>
+                <div class="col-xs-4">
+                  <a href="assets/img/{{frontImage}}" class="thumb">
+                    <img src="assets/img/{{frontImage}}" alt="" class="img-responsive">
+                  </a>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+          <div class="box" id="details">
+            <p>
+              <h4>Product details</h4>
+              <p>{{productDesc}}</p>
+              <div class="alignleft">
+              <h5> User Rating</h5>
+              <div *ngIf="rating == '1'">
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+              </div>
+              <div *ngIf="rating == '2'">
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+              </div>
+              <div *ngIf="rating == '3'">
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+              </div>
+              <div *ngIf="rating == '4'">
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star"></span>
+              </div>
+              <div *ngIf="rating == '5'">
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+              </div>
+              <div>
+                  <h5> Availibility</h5>
+                  <h6>{{avail}}</h6>
+                </div>
+            </div>
+            <div class="alignright">
+                <h5>
+                    Popularity: 
+                  </h5>
+                  <h6>{{popular}}</h6>
+            </div>
+              <br>
+              
+              
+              <!-- <h4>Available Sizes</h4>
+              <ul>
+                <li>Regular fit</li>
+                <li>The model (height 5'8" and chest 33") is wearing a size S</li>
+              </ul> -->
+
+              <hr>
+              <div class="social">
+                <h4>Show it to your friends</h4>
+                <p>
+                  <a href="#" class="external facebook" data-animate-hover="pulse">
+                    <i class="fa fa-facebook"></i>
+                  </a>
+                  <a href="#" class="external gplus" data-animate-hover="pulse">
+                    <i class="fa fa-google-plus"></i>
+                  </a>
+                  <a href="#" class="external twitter" data-animate-hover="pulse">
+                    <i class="fa fa-twitter"></i>
+                  </a>
+                  <a href="#" class="email" data-animate-hover="pulse">
+                    <i class="fa fa-envelope"></i>
+                  </a>
+                </p>
+              </div>
+          </div>
+
+          <div class="row same-height-row">
+            <div class="col-md-3 col-sm-6">
+              <div class="box same-height">
+                <h3>You may also like these products</h3>
+              </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6">
+              <div class="product same-height">
+                <div class="flip-container">
+                  <div class="flipper">
+                    <div class="front">
+                      <a href="detail.html">
+                        <img src="assets/img/men_ts_f5.jpg" alt="" class="img-responsive">
+                      </a>
+                    </div>
+                    <div class="back">
+                      <a href="detail.html">
+                        <img src="assets/img/men_ts_b5.jpg" alt="" class="img-responsive">
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <a href="detail.html" class="invisible">
+                  <img src="assets/img/men_ts_f5.jpg" alt="" class="img-responsive">
+                </a>
+                <div class="text">
+                  <h3>Solid Polo T shirt</h3>
+                  <p class="price">$50</p>
+                </div>
+              </div>
+              <!-- /.product -->
+            </div>
+
+            <div class="col-md-3 col-sm-6">
+              <div class="product same-height">
+                <div class="flip-container">
+                  <div class="flipper">
+                    <div class="front">
+                      <a href="detail.html">
+                        <img src="assets/img/men_ts_f9.jpg" alt="" class="img-responsive">
+                      </a>
+                    </div>
+                    <div class="back">
+                      <a href="detail.html">
+                        <img src="assets/img/men_ts_b9.jpg" alt="" class="img-responsive">
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <a href="detail.html" class="invisible">
+                  <img src="assets/img/men_ts_f5.jpg" alt="" class="img-responsive">
+                </a>
+                <div class="text">
+                  <h3>Men Strips T shirt</h3>
+                  <p class="price">$60</p>
+                </div>
+              </div>
+              <!-- /.product -->
+            </div>
+
+
+            <div class="col-md-3 col-sm-6">
+              <div class="product same-height">
+                <div class="flip-container">
+                  <div class="flipper">
+                    <div class="front">
+                      <a href="detail.html">
+                        <img src="assets/img/men_ts_f17.jpg" alt="" class="img-responsive">
+                      </a>
+                    </div>
+                    <div class="back">
+                      <a href="detail.html">
+                        <img src="assets/img/men_ts_b17.jpg" alt="" class="img-responsive">
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <a href="detail.html" class="invisible">
+                  <img src="img/product3.jpg" alt="" class="img-responsive">
+                </a>
+                <div class="text">
+                  <h3>Men Round Neck T shirt</h3>
+                  <p class="price">$75</p>
+
+                </div>
+              </div>
+              <!-- /.product -->
+            </div>
+
+          </div>
+
+
+        </div>
+        <!-- /.col-md-9 -->
+      </div>
+      <!-- /.container -->
+    </div>
+    <!-- /#content -->
+
+
+    <!-- *** FOOTER ***
+         _________________________________________________________ -->
+    <div id="footer" data-animate="fadeInUp">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3 col-sm-6">
+            <h4>Pages</h4>
+
+            <ul>
+              <li>
+                <a href="text.html">About us</a>
+              </li>
+              <li>
+                <a href="text.html">Terms and conditions</a>
+              </li>
+              <li>
+                <a href="faq.html">FAQ</a>
+              </li>
+              <li>
+                <a href="contact.html">Contact us</a>
+              </li>
+            </ul>
+
+            <hr>
+
+            <h4>User section</h4>
+
+            <ul>
+              <li>
+                <a href="#" data-toggle="modal" data-target="#login-modal">Login</a>
+              </li>
+              <li>
+                <a href="register.html">Regiter</a>
+              </li>
+            </ul>
+
+            <hr class="hidden-md hidden-lg hidden-sm">
+
+          </div>
+          <!-- /.col-md-3 -->
+
+          <div class="col-md-3 col-sm-6">
+
+            <h4>Top categories</h4>
+
+            <h5>Men</h5>
+
+            <ul>
+              <li>
+                <a href="category.html">T-shirts</a>
+              </li>
+              <li>
+                <a href="category.html">Shirts</a>
+              </li>
+              <li>
+                <a href="category.html">Accessories</a>
+              </li>
+            </ul>
+
+            <h5>Ladies</h5>
+            <ul>
+              <li>
+                <a href="category.html">T-shirts</a>
+              </li>
+              <li>
+                <a href="category.html">Skirts</a>
+              </li>
+              <li>
+                <a href="category.html">Pants</a>
+              </li>
+              <li>
+                <a href="category.html">Accessories</a>
+              </li>
+            </ul>
+
+            <hr class="hidden-md hidden-lg">
+
+          </div>
+          <!-- /.col-md-3 -->
+
+          <div class="col-md-3 col-sm-6">
+
+            <h4>Where to find us</h4>
+
+            <p><strong>GhostProtocol Ltd.</strong>
+              <br>Huntington Avenue
+              <br>Boston
+              <br>Massachusetts
+              <br>
+              <strong>United States of America</strong>
+          </p>
+
+            <a href="contact.html">Go to contact page</a>
+
+            <hr class="hidden-md hidden-lg">
+
+          </div>
+          <!-- /.col-md-3 -->
+
+
+
+          <div class="col-md-3 col-sm-6">
+
+            <h4>Get the news</h4>
+
+            <p class="text-muted">Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+
+            <form>
+              <div class="input-group">
+
+                <input type="text" class="form-control">
+
+                <span class="input-group-btn">
+
+                  <button class="btn btn-default" type="button">Subscribe!</button>
+
+                </span>
+
+              </div>
+              <!-- /input-group -->
+            </form>
+
+            <hr>
+
+            <h4>Stay in touch</h4>
+
+            <p class="social">
+              <a href="#" class="facebook external" data-animate-hover="shake">
+                <i class="fa fa-facebook"></i>
+              </a>
+              <a href="#" class="twitter external" data-animate-hover="shake">
+                <i class="fa fa-twitter"></i>
+              </a>
+              <a href="#" class="instagram external" data-animate-hover="shake">
+                <i class="fa fa-instagram"></i>
+              </a>
+              <a href="#" class="gplus external" data-animate-hover="shake">
+                <i class="fa fa-google-plus"></i>
+              </a>
+              <a href="#" class="email external" data-animate-hover="shake">
+                <i class="fa fa-envelope"></i>
+              </a>
+            </p>
+
+
+          </div>
+          <!-- /.col-md-3 -->
+
+        </div>
+        <!-- /.row -->
+
+      </div>
+      <!-- /.container -->
+    </div>
+    <!-- /#footer -->
+
+    <!-- *** FOOTER END *** -->
+
+
+  <!-- *** COPYRIGHT ***
+ _________________________________________________________ -->
+ <div id="copyright">
+    <div class="container">
+        <div class="col-md-6">
+            <p class="pull-left">© 2017 Web Design Project under Amuthan Arulraj [N.E.U]</p>
+
+        </div>
+        <div class="col-md-6">
+            <p class="pull-right">Template by <a href="#">Ghost Protocol</a>
+                <!-- Not removing these links is part of the license conditions of the template. Thanks for understanding :) If you want to use the template without the attribution links, you can do so after supporting further themes development at https://bootstrapious.com/donate  -->
+            </p>
+        </div>
+    </div>
+</div>
+<!-- *** COPYRIGHT END *** -->
+
+
+
+  </div>
+  <!-- /#all -->
+
+
+
+
+  <!-- *** SCRIPTS TO INCLUDE ***
+ _________________________________________________________ -->
+  <script ng-src="./js/jquery-1.11.0.min.js"></script>
+  <script ng-src="./js/bootstrap.min.js"></script>
+  <script ng-src="./js/jquery.cookie.js"></script>
+  <script ng-src="./js/waypoints.min.js"></script>
+  <script ng-src="./js/modernizr.js"></script>
+  <script ng-src="./js/bootstrap-hover-dropdown.js"></script>
+  <script ng-src="./js/owl.carousel.min.js"></script>
+  <script ng-src="./js/front.js"></script>
+
+  <script>
+    $("#carousel").carousel();
+  </script>
+
+</body>
+
+</html>
